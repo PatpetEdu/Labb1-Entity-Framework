@@ -1,0 +1,64 @@
+﻿@model IEnumerable<Labb1_Entity_Framework.Models.Leave>
+
+@{
+    ViewData["Title"] = "Leaves Index";
+    ViewBag.CurrentFilter = ViewBag.CurrentFilter ?? "";
+}
+
+<h1>Register Leave</h1>
+<a asp-action="Create" class="btn btn-success mb-3">Create New Leave</a>
+
+<h3>History</h3>
+
+@using (Html.BeginForm("Index", "Leaves", FormMethod.Get, new { @class = "form-inline mb-3" }))
+{
+    <div class="form-group">
+        <label for="search" class="mr-2">Search Name:</label>
+        <input type="text" class="form-control mr-2" name="search" id="search" value="@ViewBag.CurrentFilter" />
+        <button type="submit" class="btn btn-primary">Search</button>
+        @if (!string.IsNullOrWhiteSpace(ViewBag.CurrentFilter))
+        {
+            <button type="button" class="btn btn-secondary" onclick="clearSearch()">Clear</button>
+        }
+    </div>
+}
+
+<table class="table table-hover table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.StartDate)</th>
+            <th>@Html.DisplayNameFor(model => model.EndDate)</th>
+            <th>@Html.DisplayNameFor(model => model.ApplicationDate)</th>
+            <th>@Html.DisplayNameFor(model => model.LeaveType.Name)</th>
+            <th>@Html.DisplayNameFor(model => model.Employee.FullName)</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.StartDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.EndDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.ApplicationDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.LeaveType.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.Employee.FullName)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.LeaveId" class="btn btn-info">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.LeaveId" class="btn btn-primary">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.LeaveId" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-controller="Leaves" asp-action="MonthlySummary" asp-route-year="@DateTime.Now.Year" asp-route-month="@DateTime.Now.Month" class="btn btn-secondary mt-3">View Monthly Summary</a>
+
+
+<script> //Lagt till lite javascript kod för att rensa sökhistoriken med en clear knapp.
+    function clearSearch() {
+        document.getElementById('search').value = ''; 
+        window.location.href = '@Url.Action("Index", "Leaves")'; // Återgår till Index
+    }
+</script>

@@ -1,0 +1,55 @@
+﻿@using System.Globalization
+@model IEnumerable<Labb1_Entity_Framework.Models.Leave>
+
+@{
+    ViewData["Title"] = "Monthly Summary";
+    int year = ViewBag.Year;
+    int month = ViewBag.Month;
+    List<string> monthOptions = new List<string>();
+    for (int i = 1; i <= 12; i++)
+    {
+        string selectedText = (i == month) ? " selected=\"selected\"" : "";
+        monthOptions.Add($"<option value=\"{i}\"{selectedText}>{DateTimeFormatInfo.CurrentInfo.GetMonthName(i)}</option>");
+    }
+}
+
+<h1>Monthly Summary for @DateTimeFormatInfo.CurrentInfo.GetMonthName(month) @year</h1>
+
+@using (Html.BeginForm("MonthlySummary", "Leaves", FormMethod.Get))
+{
+    <p>Select Month and Year: </p>
+    <select name="month" class="form-control" style="width:auto;">
+        @Html.Raw(string.Join("", monthOptions))
+    </select>
+    <input type="number" name="year" class="form-control" style="width:auto;" value="@year" />
+    <input type="submit" value="Show" class="btn btn-primary" />
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Employee Name</th>
+            <th>Leave Type</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Days Off</th>
+            <th>Date Created</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Employee.FullName</td>
+                <td>@item.LeaveType.Name</td>
+                <td>@item.StartDate.ToShortDateString()</td>
+                <td>@item.EndDate.ToShortDateString()</td>
+                <td>@(item.EndDate - item.StartDate).Days + 1</td>
+                <td>@item.ApplicationDate.ToShortDateString()</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    <a asp-action="Index" class="btn btn-secondary mb-3">Back</a>
+</div>
