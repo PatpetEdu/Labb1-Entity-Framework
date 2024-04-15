@@ -173,7 +173,7 @@ namespace Labb1_Entity_Framework.Controllers
             var leaves = await _context.Leaves
                                        .Include(l => l.Employee)
                                        .Include(l => l.LeaveType)
-                                       .Where(l => l.ApplicationDate.Year == year.Value && l.ApplicationDate.Month == month.Value)
+                                       .Where(l => l.StartDate.Year == year.Value && l.StartDate.Month == month.Value)
                                        .ToListAsync();
 
             ViewBag.Year = year.Value;
