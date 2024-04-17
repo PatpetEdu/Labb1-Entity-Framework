@@ -27,6 +27,7 @@ namespace Labb1_Entity_Framework.Controllers
             IQueryable<Leave> applicationDbContext = _context.Leaves
                 .Include(l => l.Employee)
                 .Include(l => l.LeaveType)
+                .OrderByDescending(l => l.StartDate)  
                 .AsQueryable();
 
             if (!String.IsNullOrEmpty(search))
